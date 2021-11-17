@@ -13,7 +13,7 @@ export class CreateUrlShortenerDto {
     @IsOptional()
     expire_date: Date
 
-    @ApiProperty()
+    @ApiProperty({ default: false })
     is_private: boolean
 
     @ApiPropertyOptional()
