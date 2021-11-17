@@ -6,8 +6,8 @@ import { GetOriginalUrlDto } from './dto/get-original-url.dto';
 import { JwtGuard } from 'src/auth/guard/jwt.guard';
 import { User } from 'src/shared/user.decorator';
 
-@ApiTags('u')
-@Controller('u')
+@ApiTags('url')
+@Controller('url')
 export class UrlShortenerController {
   constructor(private readonly urlShortenerService: UrlShortenerService) { }
 
