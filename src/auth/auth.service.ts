@@ -7,7 +7,7 @@ import { SignInDto } from './dto/signIn.dto';
 import { SignUpDto } from './dto/signUp.dto';
 import { compare } from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-
+import { RedisService } from 'nestjs-redis'
 
 
 
@@ -18,6 +18,8 @@ export class AuthService {
     @InjectModel('User') private userModel: Model<User>,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly redisService: RedisService,
+
 
   ) { }
 
@@ -51,4 +53,44 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     }
   }
+
+  async getOTPcode(userId: string) {
+    const client = this.redisService.getClient(
+      process.env.REDIS_REGISTER_NAME
+    )
+    const foundOTP = await client.get(`OTP-${userId}`)
+    if (foundOTP != null) {
+      return foundOTP
+    }
+    const foundUser = await this.userService.getUserInfoById(userId)
+    if (!foundUser) {
+      throw new HttpException('User not found', 404)
+    }
+    const OTPcode = Math.floor(Math.random() * (999999 - 100000) + 100000);
+
+    await client.set(
+      `OTP-${userId}`,
+      OTPcode,
+      'EX',
+      process.env.REDIS_EXPIRE_TIME
+    )
+    return OTPcode
+  }
+
+  async validateOTPcode(userId: number, OTPcode: number) {
+    const client = this.redisService.getClient(
+      process.env.REDIS_REGISTER_NAME
+    )
+    const foundOTP = await client.get(`OTP-${userId}`)
+    if (foundOTP === null) {
+      throw new HttpException('OTP code expired', 404)
+    }
+    if (+foundOTP != OTPcode) {
+      throw new HttpException('Invalid OTP code', 404)
+    }
+    await client.del(`OTP-${userId}`)
+    return true
+  }
+
 }
+

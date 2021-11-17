@@ -7,6 +7,8 @@ import { UserSchema } from 'src/user/schema/user.schema';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './strategy/jwt.strategy';
+import { RedisModule } from 'nestjs-redis'
+
 require('dotenv').config()
 
 @Module({
@@ -17,6 +19,13 @@ require('dotenv').config()
     JwtModule.register({
       secret: process.env.JWT_SECRET,
       signOptions: { expiresIn: process.env.JWT_TOKEN_EXPIRE_TIME },
+    }),
+    RedisModule.register({
+      name: process.env.REDIS_REGISTER_NAME,
+      host: process.env.REDIS_HOST,
+      port: parseInt(process.env.REDIS_PORT),
+      // db: parseInt(process.env.REDIS_DB),
+      // keyPrefix: process.env.REDIS_PREFIX,
     }),
   ],
   controllers: [AuthController],
