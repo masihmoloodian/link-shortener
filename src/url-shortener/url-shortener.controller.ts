@@ -1,34 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
 import { UrlShortenerService } from './url-shortener.service';
 import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
 import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@Controller('url-shortener')
+@ApiTags('u')
+@Controller('u')
 export class UrlShortenerController {
-  constructor(private readonly urlShortenerService: UrlShortenerService) {}
+  constructor(private readonly urlShortenerService: UrlShortenerService) { }
 
+  @ApiOperation({ summary: 'Create shorter link, optional: [shortUrl, expire_date(default: 6 hour)]' })
   @Post()
-  create(@Body() createUrlShortenerDto: CreateUrlShortenerDto) {
-    return this.urlShortenerService.create(createUrlShortenerDto);
+  async create(@Body() dto: CreateUrlShortenerDto) {
+    return this.urlShortenerService.create(dto);
   }
 
-  @Get()
-  findAll() {
-    return this.urlShortenerService.findAll();
+  @ApiOperation({ summary: 'Redirect to original url by short url' })
+  @Get(':shortUrl')
+  async getOriginalUrl(
+    @Param('shortUrl') shortUrl: string,
+    @Res() res: any
+  ) {
+    const originalUrl = await this.urlShortenerService.getOriginalUrl(shortUrl)
+    return res.redirect(originalUrl);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.urlShortenerService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUrlShortenerDto: UpdateUrlShortenerDto) {
-    return this.urlShortenerService.update(+id, updateUrlShortenerDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.urlShortenerService.remove(+id);
+  @ApiOperation({ summary: 'Get a short link information' })
+  @Get('/info/:shortUrl')
+  async getInfo(
+    @Param('shortUrl') shortUrl: string,
+  ) {
+    return await this.urlShortenerService.getShortLinkInfo(shortUrl)
   }
 }

@@ -10,7 +10,7 @@ import { UrlShortenerModule } from './url-shortener/url-shortener.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb://localhost/urlshortener'),
+    MongooseModule.forRoot('mongodb://localhost/urlshortener',),
     UrlShortenerModule
   ],
   controllers: [AppController],
