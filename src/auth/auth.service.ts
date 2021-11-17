@@ -54,22 +54,20 @@ export class AuthService {
     }
   }
 
-  async getOTPcode(userId: string) {
+  async getOTPcode(phonenumber: string) {
+
     const client = this.redisService.getClient(
       process.env.REDIS_REGISTER_NAME
     )
-    const foundOTP = await client.get(`OTP-${userId}`)
+    const foundOTP = await client.get(`OTP-${phonenumber}`)
     if (foundOTP != null) {
       return foundOTP
     }
-    const foundUser = await this.userService.getUserInfoById(userId)
-    if (!foundUser) {
-      throw new HttpException('User not found', 404)
-    }
+
     const OTPcode = Math.floor(Math.random() * (999999 - 100000) + 100000);
 
     await client.set(
-      `OTP-${userId}`,
+      `OTP-${phonenumber}`,
       OTPcode,
       'EX',
       process.env.REDIS_EXPIRE_TIME
@@ -77,18 +75,18 @@ export class AuthService {
     return OTPcode
   }
 
-  async validateOTPcode(userId: number, OTPcode: number) {
+  async validateOTPcode(phonenumber: string, OTPcode: number) {
     const client = this.redisService.getClient(
       process.env.REDIS_REGISTER_NAME
     )
-    const foundOTP = await client.get(`OTP-${userId}`)
+    const foundOTP = await client.get(`OTP-${phonenumber}`)
     if (foundOTP === null) {
       throw new HttpException('OTP code expired', 404)
     }
     if (+foundOTP != OTPcode) {
       throw new HttpException('Invalid OTP code', 404)
     }
-    await client.del(`OTP-${userId}`)
+    await client.del(`OTP-${phonenumber}`)
     return true
   }
 

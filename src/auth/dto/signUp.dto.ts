@@ -5,5 +5,8 @@ export class SignUpDto {
     username: string;
 
     @ApiProperty()
+    phonenumber: string;
+
+    @ApiProperty()
     password: string;
 }

@@ -24,19 +24,9 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'Get OTP code' })
-  @ApiBearerAuth()
-  @UseGuards(JwtGuard)
-  @Get('otp')
-  async getOTPcode(@User() user) {
-    return await this.authService.getOTPcode(user.id);
-  }
-
-  @ApiOperation({ summary: 'Validate OTP code' })
-  @ApiBearerAuth()
-  @UseGuards(JwtGuard)
-  @Post('otp/validate/:code')
-  async validateOtp(@User() user, @Param('code') code: number) {
-    return await this.authService.validateOTPcode(user.id, code);
+  @Get('otp/:phonenumber')
+  async getOTPcode(@Param('phonenumber') phonenumber: string) {
+    return await this.authService.getOTPcode(phonenumber);
   }
 
 }

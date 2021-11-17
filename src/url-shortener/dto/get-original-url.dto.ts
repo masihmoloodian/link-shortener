@@ -1,20 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsOptional, IsUrl, ValidateIf } from "class-validator";
 
-export class CreateUrlShortenerDto {
+export class GetOriginalUrlDto {
     @ApiProperty()
-    originalUrl: string
-
-    @ApiPropertyOptional()
-    @IsOptional()
     shortUrl: string
 
     @ApiPropertyOptional()
     @IsOptional()
-    expire_date: Date
-
-    @ApiProperty()
-    is_private: boolean
+    code: number
 
     @ApiPropertyOptional()
     @IsOptional()

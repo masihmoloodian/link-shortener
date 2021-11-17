@@ -22,4 +22,8 @@ export class UserService {
     return user
   }
 
+  async getUserByPhoneNumber(phoneNumber: string): Promise<User> {
+    return await this.urlModel.findOne({ phoneNumber });
+  }
+
 }

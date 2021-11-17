@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query, UseGuards } from '@nestjs/common';
 import { UrlShortenerService } from './url-shortener.service';
 import { CreateUrlShortenerDto } from './dto/create-url-shortener.dto';
-import { UpdateUrlShortenerDto } from './dto/update-url-shortener.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { GetOriginalUrlDto } from './dto/get-original-url.dto';
+import { JwtGuard } from 'src/auth/guard/jwt.guard';
+import { User } from 'src/shared/user.decorator';
 
 @ApiTags('u')
 @Controller('u')
@@ -16,20 +18,23 @@ export class UrlShortenerController {
   }
 
   @ApiOperation({ summary: 'Redirect to original url by short url' })
-  @Get(':shortUrl')
+  @Get()
   async getOriginalUrl(
-    @Param('shortUrl') shortUrl: string,
+    @Query() dto: GetOriginalUrlDto,
     @Res() res: any
   ) {
-    const originalUrl = await this.urlShortenerService.getOriginalUrl(shortUrl)
+    const originalUrl = await this.urlShortenerService.getOriginalUrl(dto)
     return res.redirect(originalUrl);
   }
 
   @ApiOperation({ summary: 'Get a short link information' })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
   @Get('/info/:shortUrl')
   async getInfo(
+    @User() user,
     @Param('shortUrl') shortUrl: string,
   ) {
-    return await this.urlShortenerService.getShortLinkInfo(shortUrl)
+    return await this.urlShortenerService.getShortLinkInfo(user.id, shortUrl)
   }
 }
