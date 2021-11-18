@@ -32,8 +32,8 @@ export class UrlShortenerService {
         if (!await this.checkUrlPattern(dto.originalUrl)) {
             throw new HttpException('Invalid url', 400)
         }
-        if (dto.shortUrl) {
-            const found = await this.urlModel.findOne({ shortUrl: dto.shortUrl })
+        if (dto.customName) {
+            const found = await this.urlModel.findOne({ shortUrl: dto.customName })
             if (found) {
                 throw new HttpException('This URL is already associated', 406)
             }
@@ -48,18 +48,18 @@ export class UrlShortenerService {
 
         const createdUrl = new this.urlModel({
             originalUrl: dto.originalUrl,
-            shortUrl: dto.shortUrl ? dto.shortUrl : await this.generateKey(),
+            shortUrl: dto.customName ? dto.customName : await this.generateKey(),
             expireAt: dto.expire_date ? dto.expire_date : await this.addMinutes(+process.env.DEFAULT_EXPIRATION_TIME),
             is_private: dto.is_private,
             phonenumber: dto.phonenumber,
             userId: foundUser._id
         });
         await createdUrl.save();
-        return process.env.URL_SHORTENER_FULL_PATH + createdUrl.shortUrl
+        return process.env.URL_SHORTENER_FULL_PATH + createdUrl.customName
     }
 
     async getOriginalUrl(dto: GetOriginalUrlDto) {
-        const found = await this.urlModel.findOne({ shortUrl: dto.shortUrl })
+        const found = await this.urlModel.findOne({ shortUrl: dto.customName })
         if (!found) {
             throw new HttpException('Invalid short link', 404)
         }
