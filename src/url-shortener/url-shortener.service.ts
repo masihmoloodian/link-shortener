@@ -13,7 +13,6 @@ export class UrlShortenerService {
         @InjectModel('Url') private urlModel: Model<Url>,
         private readonly authService: AuthService,
         private readonly userService: UserService
-
     ) { }
 
     // generate unique key
@@ -27,7 +26,7 @@ export class UrlShortenerService {
         return new Date(date.getTime() + minutes * 60000);
     }
 
-    // Create Short Link(alise for a url)
+    // Create Short Link(alias for a url)
     async create(dto: CreateUrlShortenerDto): Promise<string> {
         if (!await this.checkUrlPattern(dto.original_url)) {
             throw new HttpException('Invalid url', 400)
@@ -70,8 +69,8 @@ export class UrlShortenerService {
             if (!dto.code) {
                 throw new HttpException('This link is private, needs otp code', 403)
             }
-            const validCode = await this.authService.validateOTPcode(dto.phone_number, dto.code)
-            if (!validCode) {
+            const isValid = await this.authService.validateOTPcode(dto.phone_number, dto.code)
+            if (!isValid) {
                 throw new HttpException('Invalid code', 403)
             }
         }
@@ -85,9 +84,11 @@ export class UrlShortenerService {
         if (!found) {
             throw new HttpException('Invalid short link', 404)
         }
+        // If is not private just return result
         if (found.user_id == null) {
             if (found.custom_name == customName) return found
         }
+        // If is priative then check userID for authorize user
         if (found.user_id != userId) {
             throw new HttpException('You are not authorized to access this link', 403)
         }
