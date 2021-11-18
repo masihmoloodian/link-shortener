@@ -9,8 +9,8 @@ export class Url extends Document {
     @Prop()
     originalUrl: string
 
-    @Prop()
-    shortUrl: string
+    @Prop({ index: true })
+    customName: string
 
     @Prop({ index: true, expires: 0 })
     expireAt: Date
