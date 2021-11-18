@@ -17,7 +17,7 @@ export class UrlShortenerController {
     return this.urlShortenerService.create(dto);
   }
 
-  @ApiOperation({ summary: 'Redirect to original url by short url' })
+  @ApiOperation({ summary: 'Redirect to original url by short url | Private Url needs OTP' })
   @Get()
   async getOriginalUrl(
     @Query() dto: GetOriginalUrlDto,
