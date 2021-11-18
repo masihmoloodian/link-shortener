@@ -3,11 +3,11 @@ import { IsOptional, IsUrl, ValidateIf } from "class-validator";
 
 export class CreateUrlShortenerDto {
     @ApiProperty()
-    originalUrl: string
+    original_url: string
 
     @ApiPropertyOptional()
     @IsOptional()
-    customName: string
+    custom_name: string
 
     @ApiPropertyOptional()
     @IsOptional()
@@ -18,5 +18,5 @@ export class CreateUrlShortenerDto {
 
     @ApiPropertyOptional()
     @IsOptional()
-    phonenumber: string
+    phone_number: string
 }

@@ -8,10 +8,10 @@ export type UserDocument = User & Document
 @Schema()
 export class User extends Document {
     @Prop()
-    username: string
+    user_name: string
 
     @Prop()
-    phonenumber: string
+    phone_number: string
 
     @Prop()
     password: string

@@ -19,13 +19,12 @@ export class AuthController {
 
   @Post('signIn')
   async signIn(@Body() dto: SignInDto) {
-
     return this.authService.signIn(dto);
   }
 
   @ApiOperation({ summary: 'Get OTP code' })
   @Get('otp/:phonenumber')
-  async getOTPcode(@Param('phonenumber') phonenumber: string) {
+  async getOTPcode(@Param('phonenumber') phonenumber: string): Promise<number> {
     return await this.authService.getOTPcode(phonenumber);
   }
 

@@ -13,17 +13,16 @@ export class UserService {
     return await this.urlModel.findById(id);
   }
 
-  async getUserByUsername(username: string): Promise<User> {
-    return await this.urlModel.findOne({ username });
+  async getUserByUsername(userName: string): Promise<User> {
+    return await this.urlModel.findOne({ user_name: userName });
   }
 
   async getUserInfoById(id: string): Promise<User> {
-    const user = await this.urlModel.findById(id);
-    return user
+    return await this.urlModel.findById(id);
   }
 
   async getUserByPhoneNumber(phoneNumber: string): Promise<User> {
-    return await this.urlModel.findOne({ phoneNumber });
+    return await this.urlModel.findOne({ phone_number: phoneNumber });
   }
 
 }

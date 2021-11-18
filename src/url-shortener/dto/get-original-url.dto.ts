@@ -3,7 +3,7 @@ import { IsOptional, IsUrl, ValidateIf } from "class-validator";
 
 export class GetOriginalUrlDto {
     @ApiProperty()
-    customName: string
+    custom_name: string
 
     @ApiPropertyOptional()
     @IsOptional()
@@ -11,5 +11,5 @@ export class GetOriginalUrlDto {
 
     @ApiPropertyOptional()
     @IsOptional()
-    phonenumber: string
+    phone_number: string
 }

@@ -1,11 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsPhoneNumber } from "class-validator";
 
 export class SignUpDto {
     @ApiProperty()
-    username: string;
+    user_name: string;
 
     @ApiProperty()
-    phonenumber: string;
+    @IsPhoneNumber('IR')
+    phone_number: string;
 
     @ApiProperty()
     password: string;

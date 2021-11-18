@@ -7,25 +7,25 @@ export type UrlDocument = URL & Document
 @Schema()
 export class Url extends Document {
     @Prop()
-    originalUrl: string
+    original_url: string
 
     @Prop({ index: true })
-    customName: string
+    custom_name: string
 
     @Prop({ index: true, expires: 0 })
-    expireAt: Date
+    expire_at: Date
 
     @Prop({ default: 0 })
-    redirectCount: number
+    redirect_count: number
 
     @Prop({ default: false })
     is_private: boolean
 
     @Prop()
-    phonenumber: string
+    phone_number: string
 
     @Prop()
-    userId: string
+    user_id: string
 }
 
 export const UrlSchema = SchemaFactory.createForClass(Url)
