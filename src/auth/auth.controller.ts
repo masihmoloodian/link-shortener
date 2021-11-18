@@ -22,7 +22,7 @@ export class AuthController {
     return this.authService.signIn(dto);
   }
 
-  @ApiOperation({ summary: 'Get OTP code' })
+  @ApiOperation({ summary: 'Get OTP code, valide for 90 seconds' })
   @Get('otp/:phonenumber')
   async getOTPcode(@Param('phonenumber') phonenumber: string): Promise<number> {
     return await this.authService.getOTPcode(phonenumber);

@@ -11,7 +11,7 @@ import { User } from 'src/shared/user.decorator';
 export class UrlShortenerController {
   constructor(private readonly urlShortenerService: UrlShortenerService) { }
 
-  @ApiOperation({ summary: 'Create shorter link, optional: [shortUrl, expire_date(default: 6 hour)] | if is_private: true, phonenumber required, WARN: phonenumber validate user access' })
+  @ApiOperation({ summary: 'Create shorter link, optional: [custom_name, expire_date(default: 6 hour)] | if is_private: true, phonenumber required, WARN: phonenumber validate user access' })
   @Post()
   async create(@Body() dto: CreateUrlShortenerDto) {
     return this.urlShortenerService.create(dto);
