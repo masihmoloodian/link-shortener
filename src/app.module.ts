@@ -12,7 +12,7 @@ import { AuthModule } from './auth/auth.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb://localhost/urlshortener',),
+    MongooseModule.forRoot(`mongodb://${process.env.MONGO_HOST}/${process.env.MONGO_NAME}`,),
     UrlShortenerModule,
     UserModule,
     AuthModule

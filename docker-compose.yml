@@ -1,0 +1,35 @@
+version: '3.5'
+
+services:
+  url_shortner_api:
+    container_name: url_shortner_api
+    build: .
+    restart: always
+    depends_on:
+      - url_shortner_mongo
+      - url_shortner_redis
+    ports:
+      - "3000:3000"
+    networks:
+      - url_shortner_network
+
+  url_shortner_mongo:
+    container_name: url_shortner_mongo
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - url_shortner_network
+
+  url_shortner_redis:
+    container_name: url_shortner_redis
+    image: redis:6.0-rc2-alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - url_shortner_network
+
+networks:
+  url_shortner_network:
