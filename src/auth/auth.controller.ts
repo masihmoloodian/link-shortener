@@ -1,10 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { SignInDto } from './dto/signIn.dto';
 import { SignUpDto } from './dto/signUp.dto';
-import { User } from 'src/shared/user.decorator';
-import { JwtGuard } from './guard/jwt.guard';
 
 
 @ApiTags('auth')
@@ -12,11 +10,13 @@ import { JwtGuard } from './guard/jwt.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
+  @ApiOperation({ summary: 'User sign out by username and password + phonenumber: Use for OTP' })
   @Post('/signUp')
   async signUp(@Body() dto: SignUpDto) {
     return this.authService.signUp(dto);
   }
 
+  @ApiOperation({ summary: 'User sign in by username and password' })
   @Post('signIn')
   async signIn(@Body() dto: SignInDto) {
     return this.authService.signIn(dto);

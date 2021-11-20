@@ -3,7 +3,7 @@ import { IsOptional, IsUrl, ValidateIf } from "class-validator";
 
 export class GetOriginalUrlDto {
     @ApiProperty()
-    custom_name: string
+    short_key: string
 
     @ApiPropertyOptional()
     @IsOptional()

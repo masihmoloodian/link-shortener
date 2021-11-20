@@ -7,7 +7,7 @@ export class CreateUrlShortenerDto {
 
     @ApiPropertyOptional()
     @IsOptional()
-    custom_name: string
+    short_key: string
 
     @ApiPropertyOptional()
     @IsOptional()

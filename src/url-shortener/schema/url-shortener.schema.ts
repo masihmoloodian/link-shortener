@@ -10,7 +10,7 @@ export class Url extends Document {
     original_url: string
 
     @Prop({ index: true })
-    custom_name: string
+    short_key: string
 
     @Prop({ index: true, expires: 0 })
     expire_at: Date

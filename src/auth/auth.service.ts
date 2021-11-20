@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from 'src/user/schema/user.schema';
@@ -19,6 +19,9 @@ export class AuthService {
   ) { }
 
   async signUp(dto: SignUpDto): Promise<User> {
+    if (!await this.checkIranianPhoneNumber(dto.phone_number)) {
+      throw new HttpException('Invalid Phone number', 400)
+    }
     const foundUser = await this.userService.getUserByUsername(dto.user_name);
     if (foundUser) {
       let err: Array<string> = [];
@@ -37,11 +40,11 @@ export class AuthService {
   async signIn(dto: SignInDto): Promise<Object> {
     const user = await this.userService.getUserByUsername(dto.username);
     if (!user) {
-      throw new HttpException('Invalid username', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Invalid username', 404);
     }
     const isValid = await compare(dto.password, user.password);
     if (!isValid) {
-      throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Invalid credentials', 401);
     }
 
     return await this.generateAccessToken(user);
@@ -58,7 +61,7 @@ export class AuthService {
 
     const foundUser = await this.userService.getUserByPhoneNumber(phonenumber);
     if (!foundUser) {
-      throw new HttpException('User not exists, please register to use OTP', 403)
+      throw new HttpException('User not exists, please register to use OTP', 404)
     }
 
     const client = this.redisService.getClient(
@@ -83,7 +86,7 @@ export class AuthService {
   async validateOTPcode(phonenumber: string, OTPcode: number): Promise<boolean> {
     const foundUser = await this.userService.getUserByPhoneNumber(phonenumber);
     if (!foundUser) {
-      throw new HttpException('Wrong phone number', 403)
+      throw new HttpException('Wrong phone number', 400)
     }
 
     const client = this.redisService.getClient(
@@ -91,15 +94,20 @@ export class AuthService {
     )
     const foundOTP = await client.get(`OTP-${phonenumber}`)
     if (foundOTP === null) {
-      throw new HttpException('OTP code expired', 404)
+      throw new HttpException('OTP code expired', 401)
     }
 
     if (+foundOTP != OTPcode) {
-      throw new HttpException('Invalid OTP code', 404)
+      throw new HttpException('Invalid OTP code', 401)
     }
 
     await client.del(`OTP-${phonenumber}`)
     return true
+  }
+
+  private async checkIranianPhoneNumber(phoneNumber: string): Promise<boolean> {
+    const regex = /^(?:(?:09[1-9]\d{8})|(?:091[0-9]\d{7}))$/gm
+    return regex.test(phoneNumber)
   }
 
 }
