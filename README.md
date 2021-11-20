@@ -2,9 +2,11 @@
 
 ## Description
 
-Implement url expiration with MongoDB TTL
+Implement url expiration with MongoDB TTL(Note: It is done with some delay)
 Implement OTP with redis
 Default link expiration time set with DEFAULT_EXPIRATION_TIME
+
+Note: Redirect not works on swagger and if you are using private url its works on background(Get error) and OTP has expired
 
 ## Requiremnt
 
